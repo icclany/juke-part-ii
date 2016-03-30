@@ -1,3 +1,5 @@
+'use strict';
+
 juke.factory('StatsFactory', function ($q, $http, $log) {
   var statsObj = {};
 
