@@ -2,21 +2,32 @@
 
 juke.controller('AlbumCtrl', function($scope, $rootScope, $log, StatsFactory, PlayerFactory) {
 
-  // Get specific album data from the back end with factory $http function
-  StatsFactory.fetchById("56f97744c5a5ed991dfa1cc1") // used to be album._id
-    .then(function(album) {
-      album.imageUrl = '/api/albums/' + album._id + '.image';
-      album.songs.forEach(function(song, i) {
-        song.audioUrl = '/api/songs/' + song._id + '.audio';
-        song.albumIndex = i;
-      });
-      $scope.album = album;
-      // Set duration of album
-      StatsFactory.totalTime(album)
-        .then(function(albumDuration) {
-          $scope.fullDuration = Math.round(albumDuration);
+  var album;
+
+  $scope.$on('albumPick', function(event, pickedAlbum) {
+    album = pickedAlbum;
+    // Get specific album data from the back end with factory $http function
+    StatsFactory.fetchById(album._id) // used to be album._id
+      .then(function(album) {
+        album.imageUrl = '/api/albums/' + album._id + '.image';
+        album.songs.forEach(function(song, i) {
+          song.audioUrl = '/api/songs/' + song._id + '.audio';
+          song.albumIndex = i;
         });
-    })
+        $scope.album = album;
+        // Set duration of album
+        StatsFactory.totalTime(album)
+          .then(function(albumDuration) {
+            $scope.fullDuration = Math.round(albumDuration);
+          });
+      })
+
+    $scope.showOne = true;
+  })
+
+  $scope.$on('viewAll', function(event, data) {
+    $scope.showOne = false;
+  })
 
   // main toggle
   $scope.toggle = function(song) {
@@ -24,8 +35,10 @@ juke.controller('AlbumCtrl', function($scope, $rootScope, $log, StatsFactory, Pl
       PlayerFactory.pause();
     } else {
       PlayerFactory.start(song, $scope.album.songs);
-      }
+    }
   };
+
+  $scope.view = StatsFactory.flip;
 
   $scope.currentSong = PlayerFactory.getCurrentSong;
   $scope.playing = PlayerFactory.isPlaying;

@@ -11,6 +11,7 @@
   <script src="/js/album/album.controllers.js" defer></script>
   <script src="/js/album/albums.controllers.js" defer></script>
   <script src="/js/album/album.factory.js" defer></script>
+   <script src="/js/album/sidebar.controllers.js" defer></script>
   <script src="/js/player/player.controller.js" defer></script>
   <script src="/js/player/player.factory.js" defer></script>
 </head>
@@ -18,18 +19,18 @@
 <body ng-app="juke">
   <div id="main" class="container-fluid">
     <div class="col-xs-2">
-      <sidebar>
+      <sidebar ng-controller="SidebarCtrl">
         <img src="juke.svg" class="logo">
         <section>
           <h4 class="playlist-item active">
-              <a href="#">ALBUMS</a>
+              <a href="#" ng-click="viewAlbums()">ALBUMS</a>
             </h4>
         </section>
       </sidebar>
     </div>
     <div class="col-xs-10">
       <!-- SINGLE ALBUM VIEW -->
-      <div class="album" ng-show="true" ng-controller="AlbumCtrl">
+      <div class="album" ng-show="showOne" ng-controller="AlbumCtrl">
         <p>
           <h3>{{ album.name }}</h3>
           <h4>Duration: {{ fullDuration }} minutes</h4>
@@ -59,7 +60,7 @@
         </table>
       </div>
       <!-- ALL ALBUM VIEW -->
-      <div ng-controller="AlbumsCtrl" ng-show="false">
+      <div ng-controller="AlbumsCtrl" ng-show="showAll">
         <h3>Albums</h3>
         <div class="row">
           <div class="col-xs-4" ng-repeat="album in albums" ng-click="selected(album)">
