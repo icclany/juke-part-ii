@@ -29,6 +29,10 @@ juke.controller('AlbumCtrl', function($scope, $rootScope, $log, StatsFactory, Pl
     $scope.showOne = false;
   })
 
+ $scope.$on('viewAllArtists', function(event, data) {
+    $scope.showOne = false;
+  })
+
   // main toggle
   $scope.toggle = function(song) {
     if ($scope.playing() && song === $scope.currentSong()) {
